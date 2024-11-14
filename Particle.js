@@ -15,7 +15,12 @@ class Particle {
       this.acceleration.add(force);
     }
   
+    applyGravity() {
+        this.applyForce(this.gravity); // 중력 적용
+      }
+    
     update() {
+      this.applyGravity(); // 중력 적용
       this.applyForce(this.gravity);
       this.applyForce(wind); // 바람 적용
       this.velocity.add(this.acceleration);
