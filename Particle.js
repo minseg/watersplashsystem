@@ -3,6 +3,7 @@ let wind = createVector(0.1, 0); // 가벼운 바람
 
 class Particle {
     constructor(x, y) {
+      this.size = random(5, 15); // 파티클 크기
       this.position = createVector(x, y);
       this.velocity = createVector(random(-1, 1), random(-1, 0));
       this.acceleration = createVector(0, 0); // 중력은 외부에서 적용
@@ -32,7 +33,7 @@ class Particle {
     display() {
       fill(0, 100, 255, this.lifespan); // 물 색상 표현
       noStroke();
-      ellipse(this.position.x, this.position.y, 10, 10);
+      ellipse(this.position.x, this.position.y, this.size, this.size);
     }
   
     isDead() {
