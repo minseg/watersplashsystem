@@ -2,45 +2,46 @@ let wind = createVector(0.1, 0); // 가벼운 바람
 
 
 class Particle {
-    constructor(position) {
-      this.acceleration = createVector(0, 0);
+    constructor(x, y) {
+      this.size = random(5, 15); // 파티클 크기
+      this.growthRate = random(0.1, 0.3); // 크기 증가 속도
+      this.position = createVector(x, y);
       this.velocity = createVector(random(-1, 1), random(-1, 0));
-      this.position = position.copy();
+      this.acceleration = createVector(0, 0); // 중력은 외부에서 적용
       this.lifespan = 255;
-      this.size = random(8, 16);             
-      this.rotation = random(TWO_PI);        
+      this.gravity = createVector(0, 0.05); // 중력
     }
   
+    // 외부에서 힘을 적용할 수 있도록 함수 분리
     applyForce(force) {
       this.acceleration.add(force);
     }
   
+    applyGravity() {
+        this.applyForce(this.gravity); // 중력 적용
+      }
+    
     update() {
+      this.size += this.growthRate; // 크기 증가
+      this.applyGravity(); // 중력 적용
+      this.applyForce(this.gravity);
+      this.applyForce(wind); // 바람 적용
       this.velocity.add(this.acceleration);
       this.position.add(this.velocity);
-      this.acceleration.mult(0);
-      this.lifespan -= 3;
-      this.size *= 0.98;
-      this.rotation += 0.05;
+      this.acceleration.mult(0);  // 가속도를 리셋
+      this.lifespan -= 2;
     }
   
     display() {
-      push();
-      translate(this.position.x, this.position.y);
-      rotate(this.rotation);
-      stroke(200, this.lifespan);
-      fill(127, this.lifespan);
-      ellipse(0, 0, this.size, this.size * 0.6); 
-      pop();
+      fill(0, 100, 255, this.lifespan); // 물 색상 표현
+      noStroke();
+      ellipse(this.position.x, this.position.y, this.size, this.size);
     }
   
     isDead() {
-      return this.lifespan < 0;
-    }
-  
-    run() {
-      this.update();
-      this.display();
+      return this.lifespan <= 0;
     }
   }
+  
+ 
   
