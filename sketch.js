@@ -1,4 +1,6 @@
 let system;
+let gravityStrength = 0.1;
+let windStrength = 0.05;
 
 function setup() {
   createCanvas(720, 400);
@@ -7,69 +9,37 @@ function setup() {
 
 function draw() {
   background(51);
-  system.addParticle();
+
+  // 마우스가 눌릴 때마다 파티클을 더 많이 생성
+  if (mouseIsPressed) {
+    for (let i = 0; i < 5; i++) {
+      system.addParticle();
+    }
+  } else {
+    system.addParticle();
+  }
+
+  // 중력과 바람 벡터 정의
+  let gravity = createVector(0, gravityStrength);
+  let wind = createVector(windStrength, 0);
+
+  // 파티클 시스템에 중력과 바람을 적용
+  system.applyForce(gravity);
+  system.applyForce(wind);
+
+  // 파티클 시스템 실행
   system.run();
 }
 
-// 간단한 Particle 클래스
-let Particle = function(position) {
-  this.acceleration = createVector(0, 0.05);  // 중력 역할
-  this.velocity = createVector(random(-1, 1), random(-1, 0));
-  this.position = position.copy();
-  this.lifespan = 255;
-};
-
-// Particle의 동작을 관리하는 메서드
-Particle.prototype.run = function() {
-  this.update();
-  this.display();
-};
-
-// 위치 업데이트 메서드
-Particle.prototype.update = function() {
-  this.velocity.add(this.acceleration); // 가속도를 속도에 추가
-  this.position.add(this.velocity);     // 속도를 위치에 추가
-  this.lifespan -= 2;                   // 수명 감소
-};
-
-// 화면에 파티클을 그리는 메서드
-Particle.prototype.display = function() {
-  stroke(200, this.lifespan);
-  strokeWeight(2);
-  fill(127, this.lifespan);
-  ellipse(this.position.x, this.position.y, 12, 12);
-};
-
-// 파티클의 수명이 다했는지 확인하는 메서드
-Particle.prototype.isDead = function() {
-  return this.lifespan < 0;
-};
-
-// ParticleSystem 클래스
-let ParticleSystem = function(position) {
-  this.origin = position.copy();
-  this.particles = [];
-};
-
-// 새로운 파티클을 추가하는 메서드
-ParticleSystem.prototype.addParticle = function() {
-  this.particles.push(new Particle(this.origin));
-};
-
-// 외부 힘을 모든 파티클에 적용하는 메서드
-ParticleSystem.prototype.applyForce = function(force) {
-  for (let particle of this.particles) {
-    particle.applyForce(force);
+// 키보드 입력에 따라 중력 및 바람의 세기를 조절
+function keyPressed() {
+  if (key === 'G') {
+    gravityStrength += 0.05;
+  } else if (key === 'g') {
+    gravityStrength = max(0, gravityStrength - 0.05);
+  } else if (key === 'W') {
+    windStrength += 0.02;
+  } else if (key === 'w') {
+    windStrength = max(0, windStrength - 0.02);
   }
-};
-
-// 모든 파티클을 업데이트하고 화면에 표시하는 메서드
-ParticleSystem.prototype.run = function() {
-  for (let i = this.particles.length - 1; i >= 0; i--) {
-    let p = this.particles[i];
-    p.run();
-    if (p.isDead()) {
-      this.particles.splice(i, 1);  // 수명이 다한 파티클을 제거
-    }
-  }
-};
+}
