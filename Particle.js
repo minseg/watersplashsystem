@@ -1,3 +1,6 @@
+let wind = createVector(0.1, 0); // 가벼운 바람
+
+
 class Particle {
     constructor(x, y) {
       this.position = createVector(x, y);
@@ -14,6 +17,7 @@ class Particle {
   
     update() {
       this.applyForce(this.gravity);
+      this.applyForce(wind); // 바람 적용
       this.velocity.add(this.acceleration);
       this.position.add(this.velocity);
       this.acceleration.mult(0);  // 가속도를 리셋
