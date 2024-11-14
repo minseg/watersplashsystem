@@ -4,6 +4,7 @@ let wind = createVector(0.1, 0); // 가벼운 바람
 class Particle {
     constructor(x, y) {
       this.size = random(5, 15); // 파티클 크기
+      this.growthRate = random(0.1, 0.3); // 크기 증가 속도
       this.position = createVector(x, y);
       this.velocity = createVector(random(-1, 1), random(-1, 0));
       this.acceleration = createVector(0, 0); // 중력은 외부에서 적용
@@ -21,6 +22,7 @@ class Particle {
       }
     
     update() {
+      this.size += this.growthRate; // 크기 증가
       this.applyGravity(); // 중력 적용
       this.applyForce(this.gravity);
       this.applyForce(wind); // 바람 적용
