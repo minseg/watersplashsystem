@@ -56,6 +56,13 @@ ParticleSystem.prototype.addParticle = function() {
   this.particles.push(new Particle(this.origin));
 };
 
+// 외부 힘을 모든 파티클에 적용하는 메서드
+ParticleSystem.prototype.applyForce = function(force) {
+  for (let particle of this.particles) {
+    particle.applyForce(force);
+  }
+};
+
 // 모든 파티클을 업데이트하고 화면에 표시하는 메서드
 ParticleSystem.prototype.run = function() {
   for (let i = this.particles.length - 1; i >= 0; i--) {
