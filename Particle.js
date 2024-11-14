@@ -19,7 +19,7 @@ class Particle {
     }
   
     display() {
-      fill(0, this.lifespan);
+      fill(0, 100, 255, this.lifespan); // 물 색상 표현
       noStroke();
       ellipse(this.position.x, this.position.y, 10, 10);
     }
